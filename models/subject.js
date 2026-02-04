@@ -4,7 +4,8 @@ const subjectSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true
+      required: true,
+      trim: true
     },
 
     standard: {
@@ -21,10 +22,13 @@ const subjectSchema = new mongoose.Schema(
 
     assignedBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
+      ref: 'User',
+      required: true
     }
   },
   { timestamps: true }
 );
+
+subjectSchema.index({ name: 1, standard: 1 }, { unique: true });
 
 module.exports = mongoose.model('Subject', subjectSchema);

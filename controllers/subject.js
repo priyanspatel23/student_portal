@@ -6,7 +6,7 @@ const assign = async (req, res) => {
     const { name, standardId, teacherId } = req.body;
 
     if (!name || !standardId || !teacherId) {
-      return res.status(400).json({ message: 'All fields are required' });
+      return res.status(400).json({ message: 'All fields required' });
     }
 
     const subject = await Subject.create({
@@ -17,14 +17,18 @@ const assign = async (req, res) => {
     });
 
     res.status(201).json({
-      message: 'Subject assigned successfully',
+      success: true,
       subject
     });
 
   } catch (error) {
+    if (error.code === 11000) {
+      return res.status(400).json({ message: 'Subject already assigned for this class' });
+    }
     res.status(500).json({ message: error.message });
   }
 };
+
 
 const getForTeacher = async (req, res) => {
   try {
